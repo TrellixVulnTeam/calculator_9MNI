@@ -78,6 +78,10 @@ h2 {
   flex-wrap: wrap;
 }
 
+header {
+  height: 10vh;
+}
+
 .total-container {
   font-size: 3rem;
   line-height: 1.5;
