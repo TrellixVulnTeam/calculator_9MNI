@@ -112,11 +112,12 @@ header {
     grid-gap: 5px;
 
     .zero-container.number-button {
-      width: 100%;
+      width: calc(100% - 10px);
       grid-column: 1 / span 2;
     }
     
-    .operator-button {
+    .operator-button,
+    .equals-button {
       background: $highlight-color;
   
       &::after {
@@ -124,7 +125,8 @@ header {
       }
     }
     
-    .number-button {
+    .number-button,
+    .decimal-button {
       background: $light-blue;
   
       &::after {
