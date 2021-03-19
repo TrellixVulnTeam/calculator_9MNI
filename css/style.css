@@ -298,15 +298,19 @@ header {
     grid-template-columns: repeat(4, 1fr);
     grid-gap: 5px; }
     .calc-container .buttons-container .zero-container.number-button {
-      width: 100%;
+      width: calc(100% - 10px);
       grid-column: 1 / span 2; }
-    .calc-container .buttons-container .operator-button {
+    .calc-container .buttons-container .operator-button,
+    .calc-container .buttons-container .equals-button {
       background: #ee6c4d; }
-      .calc-container .buttons-container .operator-button::after {
+      .calc-container .buttons-container .operator-button::after,
+      .calc-container .buttons-container .equals-button::after {
         background: #ea461e; }
-    .calc-container .buttons-container .number-button {
+    .calc-container .buttons-container .number-button,
+    .calc-container .buttons-container .decimal-button {
       background: #98c1d9; }
-      .calc-container .buttons-container .number-button::after {
+      .calc-container .buttons-container .number-button::after,
+      .calc-container .buttons-container .decimal-button::after {
         background: #73abcb; }
     .calc-container .buttons-container .extra-button {
       background: #e0fbfc; }
