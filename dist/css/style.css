@@ -292,6 +292,10 @@ header {
         font-size: 3.75rem; }
       .calc-container .total-container .display-size-4 {
         font-size: 3.35rem; }
+      .calc-container .total-container .display-size-5 {
+        font-size: 3.05rem; }
+      .calc-container .total-container .display-size-6 {
+        font-size: 2.80rem; }
   .calc-container .buttons-container {
     display: grid;
     width: 100%;
