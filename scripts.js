@@ -1,12 +1,8 @@
 const app = {};
-app.previousNumber = '0';
 app.currentNumber = '0';
 app.totalNumber = '0';
-app.previousOperator;
-app.currentOperator;
-app.operators = ['divide', 'multiply', 'subtract', 'plus'];
-app.operating = false;
-app.display = 0;
+app.expression = ``;
+app.totalled = false;
 
 // cached selectors
 app.$button = $('[class*="-button"]');
@@ -17,13 +13,45 @@ app.$clearButton = $('.clear-container');
 app.getButtonPush = () => {
   app.$button.on('click', function() {
     let number;
+    let operator;
+
     if ($(this).hasClass( "number-button" )) {
-      number = parseFloat($(this).text()).toString();
-      if (app.operating === false) {
-        app.totalNumber = '0';
-        app.previousNumber = '0';
-        app.previousOperator = 'none';
-        app.currentOperator = 'none';
+      if (app.totalled === true) {
+        app.currentNumber = '0';
+      }
+      switch($(this).attr('id')) {
+        case "0" :
+          number = '0';
+          break;
+        case "1" :
+          number = '1';
+          break;
+        case "2" :
+          number = '2';
+          break;
+        case "3" :
+          number = '3';
+          break;
+        case "4" :
+          number = '4';
+          break;
+        case "5" :
+          number = '5';
+          break;
+        case "6" :
+          number = '6';
+          break;
+        case "7" :
+          number = '7';
+          break;
+        case "8" :
+          number = '8';
+          break;
+        case "9" :
+          number = '9';
+          break;
+        default :
+          console.log('error: button id changed');
       }
       if (app.currentNumber == '0') {
         app.currentNumber = number;
@@ -31,78 +59,85 @@ app.getButtonPush = () => {
         app.currentNumber += number;
       }
       app.$display.text(app.currentNumber);
-      console.log('number', app.totalNumber, app.previousNumber, app.currentNumber);
+      console.log(app.expression);
+      app.totalled = false;
     }
+
     if ($(this).hasClass( "operator-button" )) {
-      if (app.operating === true) {
-        app.previousOperator = app.currentOperator;
-        app.previousNumber = app.equals(app.previousOperator);
-        app.currentOperator = app.operators[$(this).attr('value')];
-        app.currentNumber = '0';
-      } else {
-        app.previousNumber = app.currentNumber;
-        app.currentNumber = '0';
-        app.currentOperator = app.operators[$(this).attr('value')];
-      }  
-      app.operating = true;
-      console.log('operating', app.totalNumber, app.previousNumber, app.currentNumber);
-    }
-    if ($(this).hasClass( "equals-button" )) {
-      app.operating = false;
-      app.totalNumber = app.equals(app.currentOperator);
+      switch($(this).attr('value')) {
+        case '+' :
+          operator = '+';
+          break;
+        case '-' :
+          operator = '-';
+          break;
+        case '*' :
+          operator = '*';
+          break;
+        case '/' :
+          operator = '/';
+          break;
+        default :
+          console.log('error: operator value changed');
+      }
+      app.expression += app.currentNumber + operator;
+      console.log(app.expression);
       app.currentNumber = '0';
-      app.$display.text(app.totalNumber);
-      console.log('equal', app.totalNumber, app.previousNumber, app.currentNumber);
+
     }
+
+    if ($(this).hasClass( "plus-minus-button" )) {
+      if (app.currentNumber != '0') {
+        app.currentNumber = eval(app.currentNumber * -1);
+        app.$display.text(app.currentNumber);
+      } else {
+        app.currentNumber = `-`;
+      }
+    }
+
+    if ($(this).hasClass( "percentage-button" )) {
+      app.currentNumber /= 100;
+      app.$display.text(app.currentNumber);
+    }
+
+    if ($(this).hasClass( "equals-button" )) {
+      app.expression += app.currentNumber;
+      console.log(app.expression);
+      app.$display.text(app.equals());
+    }
+
     if ($(this).hasClass( "decimal-button" )) {
       if (app.currentNumber.indexOf('.') == -1) {
-        app.currentNumber += '.';
+        app.expression += '.';
         app.$display.text(app.currentNumber);
-      }
+        }
     }
     app.checkDisplayLength();
   });
 }
 
-app.equals = (operator) => {
-  let baseNumber;
-  let secondNumber;
-  if (app.operating === true) {
-    baseNumber = parseFloat(app.previousNumber);
-    secondNumber = parseFloat(app.currentNumber);
-  } else if (app.totalNumber !== '0') {
-    baseNumber = parseFloat(app.totalNumber);
-    if (app.currentNumber == '0') {
-      secondNumber = parseFloat(app.previousNumber);
-    } else {
-      secondNumber = parseFloat(app.currentNumber);
-      app.previousNumber = app.currentNumber;
-    }
-  } else {
-    baseNumber = parseFloat(app.previousNumber);
-    secondNumber = parseFloat(app.currentNumber);
-    app.previousNumber = app.currentNumber;
-  }
-  switch(operator) {
-    case 'divide' :
-      return (baseNumber / secondNumber).toString();
-    case 'multiply' :
-      return (baseNumber * secondNumber).toString();
-    case 'subtract' :
-      return (baseNumber - secondNumber).toString();
-    case 'plus' : 
-      return (baseNumber + secondNumber).toString();
-    default :
-      console.log('error');
-  }
+app.equals = () => {
+  app.totalled = true;
+  app.totalNumber = eval(app.expression);
+  app.expression = ``;
+  app.currentNumber = `${app.totalNumber}`;
+  return app.totalNumber;
 }
 
 app.checkDisplayLength = () => {
-  if (app.currentNumber.length > 8) {
+  if (app.$display.text().length > 10) {
+    app.$display.addClass( 'display-size-6' );
+    app.$display.removeClass( 'display-size-5' )
+  } else if (app.$display.text().length > 9) {
+    app.$display.addClass( 'display-size-5' );
+    app.$display.removeClass( 'display-size-4' )
+  } else if (app.$display.text().length > 8) {
     app.$display.addClass( 'display-size-4' );
-  } else if (app.currentNumber.length > 7) {
-    app.$display.addClass( 'display-size-3' );
-  } else if (app.currentNumber.length > 6) {
+    app.$display.removeClass( 'display-size-3' )
+  } else if (app.$display.text().length > 7) {
+    app.$display.addClass( 'display-size-3' )
+    app.$display.removeClass( 'display-size-2' );
+  } else if (app.$display.text().length > 6) {
     app.$display.addClass( 'display-size-2' );
   } else {
     app.removeSizeClasses();
@@ -113,20 +148,22 @@ app.removeSizeClasses = () => {
   app.$display.removeClass( 'display-size-2' );
   app.$display.removeClass( 'display-size-3' );
   app.$display.removeClass( 'display-size-4' );
+  app.$display.removeClass( 'display-size-5' );
+  app.$display.removeClass( 'display-size-6' );
 }
 
 app.clearScreen = () => {
   app.$clearButton.on('click', function() {
-    if (app.currentNumber === '0') {
-      app.previousNumber = '0';
-      app.totalNumber = '0';
-      app.previousOperator = 'none';
-      app.currentOperator = 'none';
-    } else {
+    if (app.currentNumber != '0') {
       app.currentNumber = '0';
+      app.$display.text(app.currentNumber);
+      app.checkDisplayLength();
+    } else {
+      app.expression = ``;
+      app.currentNumber = '0';
+      app.$display.text(app.currentNumber);
+      app.removeSizeClasses();
     }
-    app.$display.text(app.currentNumber);
-    app.removeSizeClasses();
   })
 }
 
